@@ -11,6 +11,7 @@
 .svn/
 .swiftpm/
 *.env
+.env        # Exclude .env file
 migrate_working_dir/
 
 # IntelliJ related
