@@ -4,6 +4,7 @@ import 'views/qr_gen.dart';
 import 'views/donation.dart';
 import 'views/qr_scan.dart';
 import 'views/register.dart';
+import 'views/paypal.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,6 +22,9 @@ class MyApp extends StatelessWidget {
         '/donation': (context) => const DonationScreen(),
         '/qr-scan': (context) => const QRScanScreen(),
         '/register': (context) => const RegisterScreen(),
+        '/paypal': (context) => PaymentScreen(
+              approvalUrl: ModalRoute.of(context)!.settings.arguments as String,
+            ),
       },
     );
   }

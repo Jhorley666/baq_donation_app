@@ -5,6 +5,7 @@ class DonateTab extends StatelessWidget {
   final String? selectedPayment;
   final bool showOtherImage;
   final Function(String?) onPaymentChanged;
+  final VoidCallback? onDonate;
 
   const DonateTab({
     super.key,
@@ -12,6 +13,7 @@ class DonateTab extends StatelessWidget {
     required this.selectedPayment,
     required this.showOtherImage,
     required this.onPaymentChanged,
+    this.onDonate,
   });
 
   @override
@@ -64,7 +66,7 @@ class DonateTab extends StatelessWidget {
           ),
         if (!showOtherImage && selectedPayment != null)
           ElevatedButton(
-            onPressed: () {
+            onPressed: onDonate ?? () {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Donating with $selectedPayment')),
               );
