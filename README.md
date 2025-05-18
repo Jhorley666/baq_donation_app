@@ -1,16 +1,6 @@
 # baq_donation_app
 
-A new Flutter project.
+El Banco de Alimentos de Quito es un pilar fundamental de nuestra sociedad. Su labor es esencial para garantizar que todos los quiteños tengan acceso a una alimentación adecuada. 
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Con el apoyo de todos, y con la implementación de este nuevo sistema CRM, el BAQ estará mejor equipado para cumplir su misión y transformar la vida de miles de personas.
+No olvidemos que ayudar es fácil, lo difícil es vivir con hambre.
