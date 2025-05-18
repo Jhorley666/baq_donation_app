@@ -6,6 +6,8 @@ import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'my_qr_gens_tab.dart';
+import 'mentions_tab.dart';
 
 class QRGeneratorScreen extends StatefulWidget {
   const QRGeneratorScreen({super.key});
@@ -99,102 +101,123 @@ class _QRGeneratorScreenState extends State<QRGeneratorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('QR Generator')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              const Text("Enter the price of the product"),
-              TextFormField(
-                controller: _amountController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(
-                  hintText: "e.g. 12.34",
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) return "Enter a value";
-                  final doubleValue = double.tryParse(value);
-                  if (doubleValue == null) return "Enter a valid number";
-                  if (!RegExp(r'^\d+(\.\d{1,2})?$').hasMatch(value)) {
-                    return "Format must be #.##";
-                  }
-                  return null;
-                },
-              ),
-              if (_amountWarning != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: Text(
-                    _amountWarning!,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                ),
-              const SizedBox(height: 16),
-              const Text("Enter comission for donation"),
-              TextFormField(
-                controller: _commissionController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(
-                  hintText: "e.g. 1.23",
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) return "Enter a value";
-                  final doubleValue = double.tryParse(value);
-                  if (doubleValue == null) return "Enter a valid number";
-                  if (!RegExp(r'^\d+(\.\d{1,2})?$').hasMatch(value)) {
-                    return "Format must be #.##";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _generateQR,
-                child: const Text("Generate QR"),
-              ),
-              const SizedBox(height: 24),
-              if (_qrData != null)
-                Column(
-                  children: [
-                    const Text("Generated QR:"),
-                    Screenshot(
-                      controller: _screenshotController,
-                      child: Container(
-                        color: Colors.white, // Ensures white background in screenshot
-                        padding: const EdgeInsets.all(8.0),
-                        child: QrImageView(
-                          data: _qrData!,
-                          version: QrVersions.auto,
-                          size: 200.0,
-                          backgroundColor: Colors.white, // White background for QR
-                          foregroundColor: Colors.black, // Black QR code
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: _saveQrToGallery,
-                          icon: const Icon(Icons.save),
-                          label: const Text("Save"),
-                        ),
-                        const SizedBox(width: 16),
-                        ElevatedButton.icon(
-                          onPressed: _shareQr,
-                          icon: const Icon(Icons.share),
-                          label: const Text("Share"),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('QR Generator'),
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Generate QR', icon: Icon(Icons.qr_code)),
+              Tab(text: 'My QRs', icon: Icon(Icons.history)),
+              Tab(text: 'Mentions', icon: Icon(Icons.people)),
             ],
           ),
+        ),
+        body: TabBarView(
+          children: [
+            // Generate QR Tab
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  children: [
+                    const Text("Enter the price of the product"),
+                    TextFormField(
+                      controller: _amountController,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        hintText: "e.g. 12.34",
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return "Enter a value";
+                        final doubleValue = double.tryParse(value);
+                        if (doubleValue == null) return "Enter a valid number";
+                        if (!RegExp(r'^\d+(\.\d{1,2})?$').hasMatch(value)) {
+                          return "Format must be #.##";
+                        }
+                        return null;
+                      },
+                    ),
+                    if (_amountWarning != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          _amountWarning!,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    const SizedBox(height: 16),
+                    const Text("Enter comission for donation"),
+                    TextFormField(
+                      controller: _commissionController,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      decoration: const InputDecoration(
+                        hintText: "e.g. 1.23",
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return "Enter a value";
+                        final doubleValue = double.tryParse(value);
+                        if (doubleValue == null) return "Enter a valid number";
+                        if (!RegExp(r'^\d+(\.\d{1,2})?$').hasMatch(value)) {
+                          return "Format must be #.##";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: _generateQR,
+                      child: const Text("Generate QR"),
+                    ),
+                    const SizedBox(height: 24),
+                    if (_qrData != null)
+                      Column(
+                        children: [
+                          const Text("Generated QR:"),
+                          Screenshot(
+                            controller: _screenshotController,
+                            child: Container(
+                              color: Colors.white,
+                              padding: const EdgeInsets.all(8.0),
+                              child: QrImageView(
+                                data: _qrData!,
+                                version: QrVersions.auto,
+                                size: 200.0,
+                                backgroundColor: Colors.white,
+                                foregroundColor: Colors.black,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: _saveQrToGallery,
+                                icon: const Icon(Icons.save),
+                                label: const Text("Save"),
+                              ),
+                              const SizedBox(width: 16),
+                              ElevatedButton.icon(
+                                onPressed: _shareQr,
+                                icon: const Icon(Icons.share),
+                                label: const Text("Share"),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            // My QRs Tab
+            const MyQrGensTab(),
+            // Mentions Tab
+            const MentionsTab(),
+          ],
         ),
       ),
     );
