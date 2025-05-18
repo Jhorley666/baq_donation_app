@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 class QRScanScreen extends StatefulWidget {
   const QRScanScreen({super.key});
@@ -9,35 +9,23 @@ class QRScanScreen extends StatefulWidget {
 }
 
 class _QRScanScreenState extends State<QRScanScreen> {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController? controller;
   String? scannedData;
+  MobileScannerController scannerController = MobileScannerController();
 
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (controller != null) {
-      controller!.pauseCamera();
-      controller!.resumeCamera();
+  void _onDetect(BarcodeCapture capture) {
+    final barcode = capture.barcodes.first;
+    if (barcode.rawValue != null && scannedData == null) {
+      setState(() {
+        scannedData = barcode.rawValue;
+      });
+      scannerController.stop();
     }
   }
 
   @override
   void dispose() {
-    controller?.dispose();
+    scannerController.dispose();
     super.dispose();
-  }
-
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      if (scannedData == null) {
-        setState(() {
-          scannedData = scanData.code;
-        });
-        controller.pauseCamera();
-      }
-    });
   }
 
   @override
@@ -48,16 +36,32 @@ class _QRScanScreenState extends State<QRScanScreen> {
         children: [
           Expanded(
             flex: 4,
-            child: QRView(
-              key: qrKey,
-              onQRViewCreated: _onQRViewCreated,
-              overlay: QrScannerOverlayShape(
-                borderColor: Colors.yellow,
-                borderRadius: 10,
-                borderLength: 30,
-                borderWidth: 10,
-                cutOutSize: 250,
-              ),
+            child: Stack(
+              children: [
+                MobileScanner(
+                  controller: scannerController,
+                  onDetect: _onDetect,
+                  overlay: Container(
+                    decoration: ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: const BorderSide(
+                          color: Colors.yellow,
+                          width: 4,
+                        ),
+                      ),
+                    ),
+                    margin: const EdgeInsets.all(40),
+                  ),
+                ),
+                if (scannedData != null)
+                  Container(
+                    color: Colors.black54,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+              ],
             ),
           ),
           Expanded(
@@ -76,7 +80,7 @@ class _QRScanScreenState extends State<QRScanScreen> {
                             setState(() {
                               scannedData = null;
                             });
-                            controller?.resumeCamera();
+                            scannerController.start();
                           },
                           child: const Text('Scan Again'),
                         ),
