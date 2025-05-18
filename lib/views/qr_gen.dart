@@ -19,6 +19,7 @@ class _QRGeneratorScreenState extends State<QRGeneratorScreen> {
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _commissionController = TextEditingController();
+  final _productNameController = TextEditingController(); // 1. Add controller
   final ScreenshotController _screenshotController = ScreenshotController();
 
   String? _qrData;
@@ -26,7 +27,6 @@ class _QRGeneratorScreenState extends State<QRGeneratorScreen> {
 
   // Example static values for demonstration
   final String orderId = "123456";
-  final String productType = "ExampleProduct";
   final String accountBanking = "9876543210";
 
   String _generateSha(String data) {
@@ -52,11 +52,12 @@ class _QRGeneratorScreenState extends State<QRGeneratorScreen> {
         return;
       }
       final commission = _commissionController.text;
+      final productName = _productNameController.text; // 2. Get product name
       final data = jsonEncode({
         "order_id": orderId,
         "amount": amount.toStringAsFixed(2),
         "commission": commission,
-        "product_type": productType,
+        "product_type": productName, // 3. Use product name
         "account_banking": accountBanking,
       });
       final sha = _generateSha(data);
@@ -64,7 +65,7 @@ class _QRGeneratorScreenState extends State<QRGeneratorScreen> {
         "order_id": orderId,
         "amount": amount.toStringAsFixed(2),
         "commission": commission,
-        "product_type": productType,
+        "product_type": productName, // 3. Use product name
         "account_banking": accountBanking,
         "sha": sha,
       });
@@ -123,6 +124,29 @@ class _QRGeneratorScreenState extends State<QRGeneratorScreen> {
                 key: _formKey,
                 child: ListView(
                   children: [
+                    // 1. Product name label
+                    const Text("Product name"),
+                    // 2. Product name input text
+                    TextFormField(
+                      controller: _productNameController,
+                      decoration: const InputDecoration(
+                        hintText: "Enter product name",
+                      ),
+                      maxLength: 30,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return "Product name is required";
+                        }
+                        if (value.trim().length < 3) {
+                          return "Minimum 3 characters";
+                        }
+                        if (value.trim().length > 30) {
+                          return "Maximum 30 characters";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
                     const Text("Enter the price of the product"),
                     TextFormField(
                       controller: _amountController,
