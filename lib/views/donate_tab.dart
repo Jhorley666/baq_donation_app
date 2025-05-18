@@ -53,11 +53,11 @@ class DonateTab extends StatelessWidget {
           Column(
             children: [
               Image.asset(
-                'assets/QR/deuna_qr_example.png',
-                height: 220,
+                'assets/payment/other_donation.jpeg',
+                height: 230,
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.image, size: 80),
+                    const Icon(Icons.image, size: 90),
               ),
               const SizedBox(height: 16),
             ],

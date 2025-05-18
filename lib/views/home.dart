@@ -122,9 +122,37 @@ class HomePage extends StatelessWidget {
                 ElevatedButton.icon(
                   icon: const Icon(Icons.volunteer_activism),
                   label: const Text('Donate'),
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState?.validate() ?? false) {
-                      Navigator.pushNamed(context, '/donation');
+                      // TODO: Replace this with your real authentication and role logic
+                      // Example: Simulate role selection for demonstration
+                      String? userRole = await showDialog<String>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Select Role'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () => Navigator.pop(context, 'donator'),
+                                child: const Text('Donator'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () => Navigator.pop(context, 'vendor'),
+                                child: const Text('Vendor'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+
+                      if (userRole == 'donator') {
+                        Navigator.pushNamed(context, '/donation');
+                      } else if (userRole == 'vendor') {
+                        Navigator.pushNamed(context, '/qr-generator');
+                      } else {
+                        // Optionally show an error or do nothing
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(
