@@ -79,6 +79,7 @@ flutter:
     - assets/QR/deuna_qr_example.png
     - assets/payment/other_donation.jpeg
     - assets/UI/heart.png
+    - assets/UI/donate_mention.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

@@ -32,74 +32,112 @@ class _MentionsTabState extends State<MentionsTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        // Main content
-        SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 24),
-              const Text(
-                'Mentions & Top Donators',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
+    return SingleChildScrollView(
+      child: Padding(
+        // 1. Add margin following the UX/UI
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // 1. Top image with spacing, not sticky
+            Padding(
+              padding: const EdgeInsets.only(top: 24.0, bottom: 12.0),
+              child: Image.asset(
+                'assets/logos/donate_logo.png',
+                height: 80,
+                fit: BoxFit.contain,
               ),
-              const SizedBox(height: 24),
-              SizedBox(
-                height: 500,
-                child: Center(
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 400,
-                    child: HeartDonationAnimation(
-                      username: donators[currentDonator],
-                      onAnimationComplete: _showNextDonator,
-                      heartSize: 60,
-                      textSize: 16,
-                      randomX: randomX,
-                    ),
+            ),
+            const Text(
+              'Mentions & Top Donators',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            // 2. Heart box with border and consistent color
+            Center(
+              child: Container(
+                width: 340,
+                height: 400,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: const Color(0xFFED6F1D), // Consistent with UX/UI
+                    width: 3,
                   ),
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.orange.withOpacity(0.08),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: HeartDonationAnimation(
+                        username: donators[currentDonator],
+                        onAnimationComplete: _showNextDonator,
+                        heartSize: 60,
+                        textSize: 16,
+                        randomX: randomX,
+                      ),
+                    ),
+                    // Image in middle bottom of the box
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Center(
+                        child: Image.asset(
+                          'assets/UI/donate_mention.png',
+                          height: 60,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 24),
-              // Social networks embedded posts (placeholder)
-              const Text('Social Networks:', style: TextStyle(fontWeight: FontWeight.bold)),
-              Container(
-                height: 100,
-                color: Colors.orange[50],
-                child: const Center(child: Text('Embedded social post here')),
+            ),
+            const SizedBox(height: 24),
+            // ...rest of your content...
+            const Text('Social Networks:', style: TextStyle(fontWeight: FontWeight.bold)),
+            Container(
+              height: 100,
+              color: Colors.orange[50],
+              child: const Center(child: Text('Embedded social post here')),
+            ),
+            const SizedBox(height: 24),
+            const Text('Notes & Suggestions:', style: TextStyle(fontWeight: FontWeight.bold)),
+            TextFormField(
+              maxLines: 3,
+              decoration: const InputDecoration(
+                hintText: 'Leave your suggestion...',
+                border: OutlineInputBorder(),
               ),
-              const SizedBox(height: 24),
-              // Notes and suggestions
-              const Text('Notes & Suggestions:', style: TextStyle(fontWeight: FontWeight.bold)),
-              TextFormField(
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  hintText: 'Leave your suggestion...',
-                  border: OutlineInputBorder(),
-                ),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton.icon(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Suggestion sent!')),
+                );
+              },
+              icon: const Icon(Icons.send),
+              label: const Text('Send'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFFED6F1D),
+                foregroundColor: Colors.white,
+                minimumSize: const Size(120, 40),
               ),
-              const SizedBox(height: 12),
-              ElevatedButton.icon(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Suggestion sent!')),
-                  );
-                },
-                icon: const Icon(Icons.send),
-                label: const Text('Send'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFED6F1D),
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(120, 40),
-                ),
-              ),
-              const SizedBox(height: 24),
-            ],
-          ),
+            ),
+            const SizedBox(height: 24),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
