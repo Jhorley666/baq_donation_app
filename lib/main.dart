@@ -89,6 +89,7 @@ class _QRGeneratorScreenState extends State<QRGeneratorScreen> {
 
   Future<void> _saveQrToGallery() async {
     if (_qrData == null) return;
+    await Future.delayed(const Duration(milliseconds: 200)); // Wait for render
     final image = await _screenshotController.capture();
     if (image == null) return;
     final directory = await getApplicationDocumentsDirectory();
@@ -102,6 +103,7 @@ class _QRGeneratorScreenState extends State<QRGeneratorScreen> {
 
   Future<void> _shareQr() async {
     if (_qrData == null) return;
+    await Future.delayed(const Duration(milliseconds: 200)); // Wait for render
     final image = await _screenshotController.capture();
     if (image == null) return;
     final directory = await getTemporaryDirectory();
@@ -175,10 +177,16 @@ class _QRGeneratorScreenState extends State<QRGeneratorScreen> {
                     const Text("Generated QR:"),
                     Screenshot(
                       controller: _screenshotController,
-                      child: QrImageView(
-                        data: _qrData!,
-                        version: QrVersions.auto,
-                        size: 200.0,
+                      child: Container(
+                        color: Colors.white, // Ensures white background in screenshot
+                        padding: const EdgeInsets.all(8.0),
+                        child: QrImageView(
+                          data: _qrData!,
+                          version: QrVersions.auto,
+                          size: 200.0,
+                          backgroundColor: Colors.white, // White background for QR
+                          foregroundColor: Colors.black, // Black QR code
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
