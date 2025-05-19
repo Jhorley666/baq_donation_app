@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'qr_payment.dart';
 
 class QRScanScreen extends StatefulWidget {
   const QRScanScreen({super.key});
@@ -19,6 +21,40 @@ class _QRScanScreenState extends State<QRScanScreen> {
         scannedData = barcode.rawValue;
       });
       scannerController.stop();
+
+      // 1. Parse QR and navigate if valid
+      try {
+        final data = jsonDecode(barcode.rawValue!);
+        final productName = data['product_type'] ?? '';
+        final totalAmount = data['amount'] ?? '';
+        final commission = data['commission'] ?? '';
+        if (productName.isNotEmpty && totalAmount.isNotEmpty && commission.isNotEmpty) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => QrPaymentScreen(
+                productName: productName,
+                totalAmount: totalAmount,
+                commission: commission,
+              ),
+            ),
+          ).then((_) {
+            setState(() {
+              scannedData = null;
+            });
+            scannerController.start();
+          });
+        }
+      } catch (e) {
+        // Invalid QR, show error
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Invalid QR code')),
+        );
+        setState(() {
+          scannedData = null;
+        });
+        scannerController.start();
+      }
     }
   }
 

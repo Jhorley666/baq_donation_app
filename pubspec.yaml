@@ -84,6 +84,7 @@ flutter:
     - assets/payment/other_donation.jpeg
     - assets/UI/heart.png
     - assets/UI/donate_mention.png
+    - assets/UI/thanks.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
